@@ -10,6 +10,8 @@ RUN apt install -y -q \
     git \
     libdb5.3-dev \
     libgmp-dev \
+    libjson-c-dev \
+    libxml2-dev \
     make \
     xz-utils
 
