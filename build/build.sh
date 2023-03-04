@@ -27,7 +27,7 @@ mkdir -p ${BUILD_DIR}
 pushd ${BUILD_DIR}
 curl -sL ${URL} | tar Jxf - --strip-components=1
 # https://stackoverflow.com/questions/37060747/escaping-origin-for-libtool-based-project
-./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'"
+./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --without-curses --with-math=gmp --with-db --with-xml2 --with-json-json-c
 make -j$(nproc)
 make prefix=${STAGING_DIR} install
 popd
