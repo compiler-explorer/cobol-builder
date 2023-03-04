@@ -3,8 +3,7 @@
 set -ex
 
 VERSION=$1
-MAJOR_MIN=$(echo ${VERSION} | cut -d- -f1)
-URL=https://sourceforge.net/projects/gnucobol/files/gnucobol/${MAJOR_MIN}/gnucobol-${VERSION}.tar.bz2
+URL=https://alpha.gnu.org/gnu/gnucobol/gnucobol-${VERSION}.tar.xz
 
 FULLNAME=gnucobol-${VERSION}
 OUTPUT=$2/${FULLNAME}.tar.xz
@@ -26,7 +25,7 @@ rm -rf ${STAGING_DIR} ${BUILD_DIR}
 
 mkdir -p ${BUILD_DIR}
 pushd ${BUILD_DIR}
-curl -sL ${URL} | tar jxf - --strip-components=1
+curl -sL ${URL} | tar Jxf - --strip-components=1
 # https://stackoverflow.com/questions/37060747/escaping-origin-for-libtool-based-project
 ./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'"
 make -j$(nproc)
