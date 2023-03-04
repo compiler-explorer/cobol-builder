@@ -21,16 +21,16 @@ if [[ "${REVISION}" == "${LAST_REVISION}" ]]; then
 fi
 
 STAGING_DIR=$(pwd)/staging
-rm -rf ${STAGING_DIR}
+BUILD_DIR=$(pwd)/build
+rm -rf ${STAGING_DIR} ${BUILD_DIR}
 
-rm -rf build
-mkdir build
-pushd build
+mkdir -p ${BUILD_DIR}
+pushd ${BUILD_DIR}
 curl -sL ${URL} | tar jxf - --strip-components=1
-./autogen.sh
-./configure
+# https://stackoverflow.com/questions/37060747/escaping-origin-for-libtool-based-project
+./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'"
 make -j$(nproc)
-make DESTDIR=${STAGING_DIR} prefix=${STAGING_DIR} install
+make prefix=${STAGING_DIR} install
 popd
 
 export XZ_DEFAULTS="-T 0"

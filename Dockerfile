@@ -3,7 +3,6 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update -y -q && apt upgrade -y -q
 RUN apt install -y -q \
-    autoconf \
     bzip2 \
     curl \
     gcc \
@@ -15,6 +14,6 @@ RUN apt install -y -q \
     make \
     xz-utils
 
-COPY build /build
+COPY build /root
 
-WORKDIR /build
+WORKDIR /root
