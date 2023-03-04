@@ -34,6 +34,6 @@ make DESTDIR=${STAGING_DIR} prefix=${STAGING_DIR} install
 popd
 
 export XZ_DEFAULTS="-T 0"
-tar Jcf "${OUTPUT}" --transform "s,^./,./cobol-${VERSION}/," -C "${STAGING_DIR}" .
+tar Jcf "${OUTPUT}" --transform "s,^./,./gnucobol-${VERSION}/," -C "${STAGING_DIR}" .
 
 echo "ce-build-status:OK"
