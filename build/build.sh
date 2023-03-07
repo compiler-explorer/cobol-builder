@@ -30,6 +30,9 @@ curl -sL ${URL} | tar Jxf - --strip-components=1
 ./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --without-curses --with-math=gmp --with-db --with-xml2 --with-json-json-c
 make -j$(nproc)
 make prefix=${STAGING_DIR} install
+
+# Copy dependent libraries
+cp $(ldd "${STAGING_DIR}/bin/cobc" | grep -E  '=> (/usr/)?/lib' | awk '{print $3}') ${STAGING_DIR}/lib/
 popd
 
 export XZ_DEFAULTS="-T 0"
