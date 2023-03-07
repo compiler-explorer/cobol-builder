@@ -31,8 +31,8 @@ curl -sL ${URL} | tar Jxf - --strip-components=1
 make -j$(nproc)
 make prefix=${STAGING_DIR} install
 
-# Copy dependent libraries
-cp $(ldd "${STAGING_DIR}/bin/cobc" | grep -E  '=> (/usr/)?/lib' | awk '{print $3}') ${STAGING_DIR}/lib/
+# Copy dependent libraries, but not libdl, libc or libpthread. This isn't ideal
+cp $(ldd "${STAGING_DIR}/bin/cobc" | grep -E  '=> (/usr/)?/lib' | grep -Ev 'lib(pthread|c|dl).so' | awk '{print $3}') ${STAGING_DIR}/lib/
 popd
 
 export XZ_DEFAULTS="-T 0"
