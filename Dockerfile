@@ -11,6 +11,7 @@ RUN apt install -y -q \
     libjson-c-dev \
     libxml2-dev \
     make \
+    patchelf \
     xz-utils
 
 COPY build /root
