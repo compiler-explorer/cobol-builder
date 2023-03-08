@@ -6,13 +6,10 @@ RUN apt install -y -q \
     curl \
     gcc \
     git \
-    libdb5.3-dev \
-    libgmp-dev \
-    libjson-c-dev \
-    libxml2-dev \
     make \
     patchelf \
-    xz-utils
+    xz-utils \
+    libgmp-dev
 
 COPY build /root
 

@@ -3,7 +3,13 @@
 set -ex
 
 VERSION=$1
-URL=https://alpha.gnu.org/gnu/gnucobol/gnucobol-${VERSION}.tar.xz
+if [[ "${VERSION}" == "1.1" ]]; then
+   URL=https://ftp.gnu.org/gnu/gnucobol/gnu-cobol-${VERSION}.tar.gz
+elif [[ "${VERSION}" =~ "rc" ]] || [[ "${VERSION}" =~ "beta" ]]; then
+   URL=https://alpha.gnu.org/gnu/gnucobol/gnucobol-${VERSION}.tar.xz
+else
+   URL=https://ftp.gnu.org/gnu/gnucobol/gnucobol-${VERSION}.tar.xz
+fi
 
 FULLNAME=gnucobol-${VERSION}
 OUTPUT=$2/${FULLNAME}.tar.xz
@@ -27,7 +33,7 @@ mkdir -p ${BUILD_DIR}
 pushd ${BUILD_DIR}
 curl -sL ${URL} | tar Jxf - --strip-components=1
 # https://stackoverflow.com/questions/37060747/escaping-origin-for-libtool-based-project
-./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --without-curses --with-math=gmp --with-db --with-xml2 --with-json-json-c
+./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --with-math=gmp --without-db --without-curses --without-xml2 --without-json
 make -j$(nproc)
 make prefix=${STAGING_DIR} install
 
