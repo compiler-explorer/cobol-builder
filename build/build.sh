@@ -3,7 +3,9 @@
 set -ex
 
 VERSION=$1
+TAR_EXTRACT=J
 if [[ "${VERSION}" == "1.1" ]]; then
+   TAR_EXTRACT=z
    URL=https://ftp.gnu.org/gnu/gnucobol/gnu-cobol-${VERSION}.tar.gz
 elif [[ "${VERSION}" =~ "rc" ]] || [[ "${VERSION}" =~ "beta" ]]; then
    URL=https://alpha.gnu.org/gnu/gnucobol/gnucobol-${VERSION}.tar.xz
@@ -21,8 +23,8 @@ echo "ce-build-revision:${REVISION}"
 echo "ce-build-output:${OUTPUT}"
 
 if [[ "${REVISION}" == "${LAST_REVISION}" ]]; then
-    echo "ce-build-status:SKIPPED"
-    exit
+   echo "ce-build-status:SKIPPED"
+   exit
 fi
 
 STAGING_DIR=$(pwd)/staging
@@ -31,7 +33,7 @@ rm -rf ${STAGING_DIR} ${BUILD_DIR}
 
 mkdir -p ${BUILD_DIR}
 pushd ${BUILD_DIR}
-curl -sL ${URL} | tar Jxf - --strip-components=1
+curl -sL ${URL} | tar ${TAR_EXTRACT}xf - --strip-components=1
 # https://stackoverflow.com/questions/37060747/escaping-origin-for-libtool-based-project
 ./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --with-math=gmp --without-db --without-curses --without-xml2 --without-json
 make -j$(nproc)
