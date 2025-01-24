@@ -4,9 +4,11 @@ set -ex
 
 VERSION=$1
 TAR_EXTRACT=J
+WITH_OR_WITHOUT_CURSES=--without-curses
 if [[ "${VERSION}" == "1.1" ]]; then
    TAR_EXTRACT=z
    URL=https://ftp.gnu.org/gnu/gnucobol/gnu-cobol-${VERSION}.tar.gz
+   WITH_OR_WITHOUT_CURSES=--with-curses
 elif [[ "${VERSION}" =~ "rc" ]] || [[ "${VERSION}" =~ "beta" ]]; then
    URL=https://alpha.gnu.org/gnu/gnucobol/gnucobol-${VERSION}.tar.xz
 else
@@ -35,12 +37,12 @@ mkdir -p ${BUILD_DIR}
 pushd ${BUILD_DIR}
 curl -sL ${URL} | tar ${TAR_EXTRACT}xf - --strip-components=1
 # https://stackoverflow.com/questions/37060747/escaping-origin-for-libtool-based-project
-./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --with-math=gmp --without-db --without-curses --without-xml2 --without-json
+./configure LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib'" --with-math=gmp --without-db ${WITH_OR_WITHOUT_CURSES} --without-xml2 --without-json
 make -j$(nproc)
 make prefix=${STAGING_DIR} install
 
 # Copy dependent libraries, but not libdl, libc or libpthread. This isn't ideal..
-cp $(ldd "${STAGING_DIR}/bin/cobc" | grep -E  '=> (/usr/)?/lib' | grep -Ev 'lib(pthread|c|dl).so' | awk '{print $3}') ${STAGING_DIR}/lib/
+cp $(ldd "${STAGING_DIR}"/bin/* | grep -E  '=> (/usr/)?/lib' | grep -Ev 'lib(pthread|c|dl).so' | awk '{print $3}') ${STAGING_DIR}/lib/
 patchelf --set-rpath '$ORIGIN/../lib' $(find ${STAGING_DIR}/lib/ -name \*.so\*)
 popd
 
