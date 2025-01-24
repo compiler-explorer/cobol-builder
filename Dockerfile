@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update -y -q && apt upgrade -y -q
@@ -7,6 +7,7 @@ RUN apt install -y -q \
     gcc \
     git \
     make \
+    ncurses-dev \
     patchelf \
     xz-utils \
     libgmp-dev
